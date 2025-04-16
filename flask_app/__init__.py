@@ -19,17 +19,10 @@ import os
 # local
 from .client import MovieClient
 
-# update with your API Key
-OMDB_API_KEY = 'f4b6aa0e'
-
-# do not remove these 2 lines (required for autograder to work)
-if os.getenv('OMDB_API_KEY'):
-    OMDB_API_KEY = os.getenv('OMDB_API_KEY')
-
 db = MongoEngine()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
-movie_client = MovieClient(OMDB_API_KEY)
+movie_client = MovieClient()
 
 from .users.routes import users
 from .movies.routes import movies
