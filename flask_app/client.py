@@ -1,29 +1,28 @@
 import requests
 
 
-class Movie(object):
-    def __init__(self, omdb_json, detailed=False):
+class Book(object):
+    def __init__(self, library_json, detailed=False):
         if detailed:
-            self.genres = omdb_json["Genre"]
-            self.director = omdb_json["Director"]
-            self.actors = omdb_json["Actors"]
-            self.plot = omdb_json["Plot"]
-            self.awards = omdb_json["Awards"]
+            self.genres = library_json["Genre"]
+            self.director = library_json["Director"]
+            self.actors = library_json["Actors"]
+            self.plot = library_json["Plot"]
+            self.awards = library_json["Awards"]
 
-        self.title = omdb_json["Title"]
-        self.year = omdb_json["Year"]
-        self.imdb_id = omdb_json["imdbID"]
+        self.title = library_json["Title"]
+        self.year = library_json["Year"]
+        self.imdb_id = library_json["imdbID"]
         self.type = "Movie"
-        self.poster_url = omdb_json["Poster"]
+        self.poster_url = library_json["Poster"]
 
     def __repr__(self):
         return self.title
 
 
-class MovieClient(object):
-    def __init__(self, api_key):
+class BookClient(object):
+    def __init__(self):
         self.sess = requests.Session()
-        self.base_url = f"http://www.omdbapi.com/?apikey={api_key}&r=json&type=movie&"
 
     def search(self, search_string):
         """
@@ -96,12 +95,10 @@ class MovieClient(object):
 ## -- Example usage -- ###
 if __name__ == "__main__":
     import os
+    
+    books = BookClient().search("guardians")
 
-    client = MovieClient(os.environ.get("OMDB_API_KEY"))
-
-    movies = client.search("guardians")
-
-    for movie in movies:
-        print(movie)
+    for book in books:
+        print(book)
 
     print(len(movies))
