@@ -11,7 +11,7 @@
   {% for result in results %}
 
   <form method="POST" action="{{ url_for('books.book_query_info')}}" style="display: inline;">
-    <input type="hidden" name="book" value="{{ result }}">
+    <input type="hidden" name="book" value='{{ result.to_dict() | tojson | safe }}'>
     <button type="submit" class="group movie-card">
       <img src="{{ result.book_cover }}" class="movie-card-img" alt="missing" />
       <h5 class="movie-card-content"> {{ result.title }}

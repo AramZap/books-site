@@ -13,16 +13,17 @@ class User(db.Document, UserMixin):
     password = db.StringField(required = True)
     profile_pic = db.ImageField()
 
-    # Returns unique string identifying our object
     def get_id(self):
         return self.username
 
 class Book(db.Document):
     user = db.ReferenceField(User)
-    content = db.StringField(required = True, min_length = 5, max_length = 500)
+    notes = db.StringField()
+    rating = db.IntField()
     date = db.StringField(required = True)
     book_key = db.StringField(required = True)
-    book_title = db.StringField(required = True)
+    title = db.StringField(required = True)
     book_cover = db.ImageField()
-    author_name = db.StringField(required = True)
+    author = db.StringField(required = True)
     author_img = db.ImageField()
+    publish_year = db.StringField(required = True)

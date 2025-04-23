@@ -2,11 +2,15 @@ import base64,io
 from io import BytesIO
 from flask import Blueprint, render_template, url_for, redirect, request, flash
 from flask_login import current_user
+from werkzeug.utils import secure_filename
 
 from .. import book_client
-from ..forms import MovieReviewForm, SearchForm
+from ..forms import AddBookForm, SearchForm
 from ..models import User, Book
 from ..utils import current_time
+import json
+import requests
+from io import BytesIO
 
 books = Blueprint("books", __name__)
 """ ************ Helper for pictures uses username to get their profile picture************ """
@@ -18,7 +22,7 @@ def get_b64_img(username):
 
 """ ************ View functions ************ """
 
-@books.route("/")
+@books.route("/", methods=["GET", "POST"])
 def index():
     return render_template("index.html")
 
@@ -43,34 +47,44 @@ def query_results(query):
 
 @books.route("/book_query_info", methods=["POST"])
 def book_query_info():
-    # try:
-    #     result = book_client.retrieve_book_by_id(movie_id)
-    # except ValueError as e:
-    #     return render_template("movie_detail.html", error_msg=str(e))
-    
-    # book = request.form.get("book")
+    book = json.loads(request.form.get("book"))
+    form = AddBookForm()
+    return render_template("book_query_info.html", form=form, book=book)
 
-    # form = MovieReviewForm()
-    # if form.validate_on_submit():
-    #     review = Review(
-    #         commenter=current_user._get_current_object(),
-    #         content=form.text.data,
-    #         date=current_time(),
-    #         imdb_id=movie_id,
-    #         movie_title=result.title,
-    #     )
+@books.route("/add_book_to_collection", methods=["POST"])
+def add_book_to_collection():
 
-    #     review.save()
+    form = AddBookForm()
+    if form.validate_on_submit():
+        book = json.loads(request.form.get("book"))
 
-    #     return redirect(request.path)
+        book_img_response = requests.get(book["book_cover"])
+        book_img_data = BytesIO(book_img_response.content)
+        book_img_data.name = secure_filename(book["book_cover"].split("/")[-1])
+        book_img_data.content_type = book_img_response.headers.get("Content-Type", "image/jpeg")
 
-    # reviews = Review.objects(imdb_id=movie_id)
+        author_img_response = requests.get(book["author_img"])
+        author_img_data = BytesIO(author_img_response.content)
+        author_img_data.name = secure_filename(book["author_img"].split("/")[-1])
+        author_img_data.content_type = author_img_response.headers.get("Content-Type", "image/jpeg")
 
-    return render_template(
-        "movie_detail.html"
-    )
+        book_to_add = Book(
+            user=current_user._get_current_object(),
+            notes=form.notes.data,
+            rating=int(form.rating.data),
+            date=current_time(),
+            book_key=book["book_key"],
+            title=book["title"],
+            book_cover=book_img_data,
+            author=book["author"],
+            author_img=author_img_data,
+            publish_year=str(book["publish_year"])
+        )
+        
+        book_to_add.save()
+        return redirect(url_for('books.index'))
 
-    # , form=form, movie=result, reviews=reviews
+    return redirect(request.referrer)
 
 
 @books.route("/user/<username>")

@@ -1,4 +1,5 @@
 import requests
+import json
 
 
 class Book(object):
@@ -11,8 +12,19 @@ class Book(object):
         self.author_img = f"https://covers.openlibrary.org/a/olid/{library_json['author_key'][0]}-M.jpg"
         self.publish_year = library_json["first_publish_year"]
 
+    def to_dict(self):
+        return {
+            "title": self.title,
+            "book_key": self.book_key,
+            "book_cover": self.book_cover,
+            "author": self.author,
+            "author_img_key": self.author_img_key,
+            "author_img": self.author_img,
+            "publish_year": self.publish_year
+        }
+
     def __str__(self):
-        return self.title
+        return json.dumps(self.to_dict())
 
 
 class BookClient(object):
