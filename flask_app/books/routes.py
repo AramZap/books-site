@@ -8,7 +8,7 @@ from ..forms import MovieReviewForm, SearchForm
 from ..models import User, Review
 from ..utils import current_time
 
-movies = Blueprint("movies", __name__)
+books = Blueprint("books", __name__)
 """ ************ Helper for pictures uses username to get their profile picture************ """
 def get_b64_img(username):
     user = User.objects(username=username).first()
@@ -19,17 +19,17 @@ def get_b64_img(username):
 """ ************ View functions ************ """
 
 
-@movies.route("/", methods=["GET", "POST"])
+@books.route("/", methods=["GET", "POST"])
 def index():
     form = SearchForm()
 
     if form.validate_on_submit():
-        return redirect(url_for("movies.query_results", query=form.search_query.data))
+        return redirect(url_for("books.query_results", query=form.search_query.data))
 
     return render_template("index.html", form=form)
 
 
-@movies.route("/search-results/<query>", methods=["GET"])
+@books.route("/search-results/<query>", methods=["GET"])
 def query_results(query):
     try:
         results = movie_client.search(query)
@@ -39,7 +39,7 @@ def query_results(query):
     return render_template("query.html", results=results)
 
 
-@movies.route("/movies/<movie_id>", methods=["GET", "POST"])
+@books.route("/books/<movie_id>", methods=["GET", "POST"])
 def movie_detail(movie_id):
     try:
         result = movie_client.retrieve_movie_by_id(movie_id)
@@ -67,7 +67,7 @@ def movie_detail(movie_id):
     )
 
 
-@movies.route("/user/<username>")
+@books.route("/user/<username>")
 def user_detail(username):
     user = User.objects(username=username).first()
 

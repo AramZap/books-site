@@ -2,103 +2,52 @@ import requests
 
 
 class Book(object):
-    def __init__(self, library_json, detailed=False):
-        if detailed:
-            self.genres = library_json["Genre"]
-            self.director = library_json["Director"]
-            self.actors = library_json["Actors"]
-            self.plot = library_json["Plot"]
-            self.awards = library_json["Awards"]
+    def __init__(self, library_json):
+        self.title = library_json["title"]
+        self.book_key = library_json["cover_edition_key"]
+        self.book_cover = f"https://covers.openlibrary.org/b/olid/{library_json['cover_edition_key']}-M.jpg"
+        self.author = library_json["author_name"][0]
+        self.author_img_key = library_json["author_key"][0]
+        self.author_img = f"https://covers.openlibrary.org/a/olid/{library_json['author_key'][0]}-M.jpg"
+        self.publish_year = library_json["first_publish_year"]
 
-        self.title = library_json["Title"]
-        self.year = library_json["Year"]
-        self.imdb_id = library_json["imdbID"]
-        self.type = "Movie"
-        self.poster_url = library_json["Poster"]
-
-    def __repr__(self):
+    def __str__(self):
         return self.title
 
 
 class BookClient(object):
     def __init__(self):
         self.sess = requests.Session()
+        self.base_url = "https://openlibrary.org/search.json?"
 
     def search(self, search_string):
-        """
-        Searches the API for the supplied search_string, and returns
-        a list of Media objects if the search was successful, or the error response
-        if the search failed.
-
-        Only use this method if the user is using the search bar on the website.
-        """
         search_string = "+".join(search_string.split())
-        page = 1
 
-        search_url = f"s={search_string}&page={page}"
+        search_url = f"q={search_string}"
 
         resp = self.sess.get(self.base_url + search_url)
 
         if resp.status_code != 200:
             raise ValueError(
-                "Search request failed; make sure your API key is correct and authorized"
+                "Search request failed!"
             )
 
-        data = resp.json()
-
-        if data["Response"] == "False":
-            raise ValueError(f'[ERROR]: Error retrieving results: \'{data["Error"]}\' ')
-
-        search_results_json = data["Search"]
-        remaining_results = int(data["totalResults"])
-
+        search_results_json = resp.json()["docs"]
         result = []
 
-        ## We may have more results than are first displayed
-        while remaining_results != 0:
-            for item_json in search_results_json:
-                result.append(Movie(item_json))
-                remaining_results -= len(search_results_json)
-            page += 1
-            search_url = f"s={search_string}&page={page}"
-            resp = self.sess.get(self.base_url + search_url)
-            if resp.status_code != 200 or resp.json()["Response"] == "False":
-                break
-            search_results_json = resp.json()["Search"]
+        for item_json in search_results_json:
+            if all(key in item_json for key in {"title", "cover_edition_key", "author_name", "author_key", "first_publish_year"}):
+                result.append(Book(item_json))
 
         return result
 
-    def retrieve_movie_by_id(self, imdb_id):
-        """
-        Use to obtain a Movie object representing the movie identified by
-        the supplied imdb_id
-        """
-        movie_url = self.base_url + f"i={imdb_id}&plot=full"
-
-        resp = self.sess.get(movie_url)
-
-        if resp.status_code != 200:
-            raise ValueError(
-                "Search request failed; make sure your API key is correct and authorized"
-            )
-
-        data = resp.json()
-
-        if data["Response"] == "False":
-            raise ValueError(f'[ERROR]: Error retrieving results: \'{data["Error"]}\' ')
-
-        movie = Movie(data, detailed=True)
-
-        return movie
-
-
 ## -- Example usage -- ###
 if __name__ == "__main__":
-    import os
     
-    books = BookClient().search("guardians")
+    books = BookClient().search("curtain poirot's last case")
 
     for book in books:
         print(book)
+        print(book.author_img)
 
-    print(len(movies))
+    print(len(books))

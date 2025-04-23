@@ -17,10 +17,12 @@ class User(db.Document, UserMixin):
     def get_id(self):
         return self.username
 
-class Review(db.Document):
-    commenter = db.ReferenceField(User)
+class Book(db.Document):
+    user = db.ReferenceField(User)
     content = db.StringField(required = True, min_length = 5, max_length = 500)
     date = db.StringField(required = True)
-    imdb_id = db.StringField(required = True, min_length = 9, max_length = 9)
-    movie_title = db.StringField(required = True, min_length = 1, max_length = 100)
-    image = db.StringField()
+    book_key = db.StringField(required = True)
+    book_title = db.StringField(required = True)
+    book_cover = db.ImageField()
+    author_name = db.StringField(required = True)
+    author_img = db.ImageField()
