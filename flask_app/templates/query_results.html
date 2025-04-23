@@ -1,0 +1,26 @@
+{% extends "header.html" %} {% block content %}
+
+{% if error_msg %}
+  <b class="text-red-400">
+    {{ error_msg }}
+  </b>
+{% endif %}
+
+<div class="results-container">
+  <div class="decoration-container"><div class="decoration"></div></div>
+  {% for result in results %}
+
+  <form method="POST" action="{{ url_for('books.book_query_info')}}" style="display: inline;">
+    <input type="hidden" name="book" value="{{ result }}">
+    <button type="submit" class="group movie-card">
+      <img src="{{ result.book_cover }}" class="movie-card-img" alt="missing" />
+      <h5 class="movie-card-content"> {{ result.title }}
+        <span class="text-neutral-400 font-normal"> {{ result.author }} </span>
+      </h5>
+    </button>
+  </form>
+
+  {% endfor %}
+</div>
+
+{% endblock %}

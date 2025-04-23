@@ -1,0 +1,22 @@
+{% extends "header.html" %} {% block content %}
+<div class="main-container">
+  <div class="decoration-main-container"><div class="decoration-main"></div></div>
+  <h2 class="main-title"> Welcome to Book Tracker! </h2>
+
+  <form class="searchbar" action="{{ url_for('books.add_book')}}" method="POST">
+    {{ form.csrf_token }}
+    {{ form.search_query(class="form-control", placeholder="Enter book info") }}
+
+    {% if form.search_query.errors %}
+      <div class="error" role="alert">
+        {% for error in form.search_query.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+    
+    {{ form.submit(class="form-button") }}
+  </form>
+
+</div>
+{% endblock %}

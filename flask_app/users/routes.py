@@ -22,7 +22,7 @@ def register():
     form = RegistrationForm()
 
     if current_user.is_authenticated:
-        return redirect(url_for("movies.index"))
+        return redirect(url_for("books.index"))
     elif request.method == "POST":
         if form.validate_on_submit():
 
@@ -40,7 +40,7 @@ def login():
     form = LoginForm()
 
     if current_user.is_authenticated:
-        return redirect(url_for("movies.index"))
+        return redirect(url_for("books.index"))
     elif request.method == "POST":
         if form.validate_on_submit():
 
@@ -59,7 +59,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("movies.index"))
+    return redirect(url_for("books.index"))
 
 
 @users.route("/account", methods=["GET", "POST"])

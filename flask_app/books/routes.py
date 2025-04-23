@@ -3,9 +3,9 @@ from io import BytesIO
 from flask import Blueprint, render_template, url_for, redirect, request, flash
 from flask_login import current_user
 
-from .. import movie_client
+from .. import book_client
 from ..forms import MovieReviewForm, SearchForm
-from ..models import User, Review
+from ..models import User, Book
 from ..utils import current_time
 
 books = Blueprint("books", __name__)
@@ -18,53 +18,59 @@ def get_b64_img(username):
 
 """ ************ View functions ************ """
 
-
-@books.route("/", methods=["GET", "POST"])
+@books.route("/")
 def index():
+    return render_template("index.html")
+
+@books.route("/add_book", methods=["GET", "POST"])
+def add_book():
     form = SearchForm()
 
     if form.validate_on_submit():
         return redirect(url_for("books.query_results", query=form.search_query.data))
 
-    return render_template("index.html", form=form)
+    return render_template("add_book.html", form=form)
 
-
-@books.route("/search-results/<query>", methods=["GET"])
+@books.route("/query-results/<query>", methods=["GET"])
 def query_results(query):
     try:
-        results = movie_client.search(query)
+        results = book_client.search(query)
     except ValueError as e:
-        return render_template("query.html", error_msg=str(e))
+        return render_template("query_results.html", error_msg=str(e))
 
-    return render_template("query.html", results=results)
+    return render_template("query_results.html", results=results)
 
 
-@books.route("/books/<movie_id>", methods=["GET", "POST"])
-def movie_detail(movie_id):
-    try:
-        result = movie_client.retrieve_movie_by_id(movie_id)
-    except ValueError as e:
-        return render_template("movie_detail.html", error_msg=str(e))
+@books.route("/book_query_info", methods=["POST"])
+def book_query_info():
+    # try:
+    #     result = book_client.retrieve_book_by_id(movie_id)
+    # except ValueError as e:
+    #     return render_template("movie_detail.html", error_msg=str(e))
+    
+    # book = request.form.get("book")
 
-    form = MovieReviewForm()
-    if form.validate_on_submit():
-        review = Review(
-            commenter=current_user._get_current_object(),
-            content=form.text.data,
-            date=current_time(),
-            imdb_id=movie_id,
-            movie_title=result.title,
-        )
+    # form = MovieReviewForm()
+    # if form.validate_on_submit():
+    #     review = Review(
+    #         commenter=current_user._get_current_object(),
+    #         content=form.text.data,
+    #         date=current_time(),
+    #         imdb_id=movie_id,
+    #         movie_title=result.title,
+    #     )
 
-        review.save()
+    #     review.save()
 
-        return redirect(request.path)
+    #     return redirect(request.path)
 
-    reviews = Review.objects(imdb_id=movie_id)
+    # reviews = Review.objects(imdb_id=movie_id)
 
     return render_template(
-        "movie_detail.html", form=form, movie=result, reviews=reviews
+        "movie_detail.html"
     )
+
+    # , form=form, movie=result, reviews=reviews
 
 
 @books.route("/user/<username>")
@@ -74,5 +80,5 @@ def user_detail(username):
     if user is None:
         return render_template("user_detail.html", error = f"user \"{username}\" doesn't exist.")
     else:
-        reviews = list(Review.objects(commenter = user))
+        reviews = list(Book.objects(commenter = user))
         return render_template("user_detail.html", error = None, image = get_b64_img(username), username = username, reviews = reviews)

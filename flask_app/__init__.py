@@ -17,12 +17,12 @@ from datetime import datetime
 import os
 
 # local
-from .client import MovieClient
+from .client import BookClient
 
 db = MongoEngine()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
-movie_client = MovieClient()
+book_client = BookClient()
 
 from .users.routes import users
 from .books.routes import books
