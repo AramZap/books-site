@@ -5,7 +5,7 @@
 
   {% if current_user.is_authenticated %}
     <div class="flex">
-      <a class="my-5 mr-5 ml-0 navlink" href="{{ url_for('users.account') }}">view collection</a>
+      <a class="my-5 mr-5 ml-0 navlink" href="{{ url_for('users.collection') }}">view collection</a>
       <a class="my-5 mr-5 ml-0 navlink" href="{{ url_for('books.add_book') }}">add book</a>
     </div> 
   
