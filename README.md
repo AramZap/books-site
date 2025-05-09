@@ -41,7 +41,7 @@
    **Forms:**  
    - Registration: user needs an email address, name, and password to register an account
    - Login: user needs to enter a valid email address and password to log in to their account
-   - AddBook: after a user has selected a book to add to their collection, they must give the book a rating(out of 5) and any notes about the book to add a book to their collection
+   - AddBook: after a user has selected a book to add to their collection, they must give the book a rating (out of 5) and any notes about the book to add a book to their collection
    - Search: user can search for any book by title - which queries the OpenLibrary API through our website
    - ModifyBook: after selecting a book in their collection, a user can modify the notes they wrote about the book as well as the rating they gave the book
    - UpdateUsername: user can change their username to one that isn't claimed by another user
@@ -61,10 +61,14 @@
     ### Books – Information about users’ book collections, adding books, and adding/editing notes/ratings
 
     **Routes:**
-    - Index - provides buttons to view collection 
-    - **Collection** – View books you have added  
-    - **Add Book** – Add a new book  
-    - **Review** – Leave reviews/comments on books you have added  
+    - Index - provides buttons to view collection and add books to collection
+    - Add Book – Provides search bar to search for books within OpenLibrary API by book title
+    - Query Results – Shows results of querying from above route 
+    - Book Query Info – Provides info about a book after a user clicks on one of the book results from the above route
+    - Add Book To Collection - Processes actually adding the new book to the user's collection in MongoDB
+    - Collection - a user can view their collection and sort the books in it in various ways via the dropdown
+    - Book Info - A user can view information about a particular book in their collection after clicking on it from the above route, their notes and provided rating and can even update their notes and rating.
+    - Modify Book In Collection - Processes actually modifying the book's notes/rating in the user's collection in MongoDB
 
 
    **Database:**
