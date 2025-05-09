@@ -88,30 +88,3 @@ def account():
             current_user.save()
             return redirect(url_for("users.login"))
     return render_template("account.html", image = get_b64_img(current_user.username), update_username_form = update_username_form, update_profile_pic_form = update_profile_pic_form)
-
-@users.route("/collection", methods=["GET"])
-@login_required
-def collection():
-    def to_dict(book):
-        book_cover = book.book_cover
-        author_img = book.author_img
-        
-        if book_cover:
-            bytes_book_cover = BytesIO(book.book_cover.read())
-            book_cover = f"data:image/jpeg;base64, {base64.b64encode(bytes_book_cover.getvalue()).decode()}"
-        
-        if author_img:
-            bytes_author_img = BytesIO(book.author_img.read())
-            author_img = f"data:image/jpeg;base64, {base64.b64encode(bytes_author_img.getvalue()).decode()}"
-        
-        return {
-            "title": book.title,
-            "book_key": book.book_key,
-            "book_cover": book_cover,
-            "author": book.author,
-            "author_img": author_img,
-            "publish_year": book.publish_year
-        }
-    
-    book_collection = [to_dict(book) for book in Book.objects(user=current_user)]
-    return render_template("book_collection.html", book_collection=book_collection)

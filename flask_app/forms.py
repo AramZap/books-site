@@ -32,6 +32,14 @@ class AddBookForm(FlaskForm):
         validators=[InputRequired()])
     submit = SubmitField("Add this book to your collection")
 
+class ModifyBookForm(FlaskForm):
+    notes = TextAreaField("Notes", validators=[InputRequired()])
+    rating = RadioField(
+        label="Your Rating",
+        coerce=int,
+        choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')],
+        validators=[InputRequired()])
+    submit = SubmitField("Update this book within your collection")
 
 class RegistrationForm(FlaskForm):
     username = StringField(

@@ -8,9 +8,26 @@
 
 <div class="results-container">
   <div class="decoration-container"><div class="decoration"></div></div>
+
+  <div class="w-full flex justify-center my-6">
+    <form method="GET" action="{{ url_for('books.collection') }}" class="flex flex-wrap gap-4 items-center justify-center bg-white bg-opacity-10 rounded-2xl px-6 py-4 shadow-md backdrop-blur">
+      <label for="sort_by" class="text-lg font-bold text-neutral-100">Sort by:</label>
+      <select name="sort_by" id="sort_by" class="form-control text-black">
+        <option value="title_asc" {% if request.args.get('sort_by') == 'title_asc' %}selected{% endif %}>Title (A-Z)</option>
+        <option value="title_desc" {% if request.args.get('sort_by') == 'title_desc' %}selected{% endif %}>Title (Z-A)</option>
+        <option value="rating_asc" {% if request.args.get('sort_by') == 'rating_asc' %}selected{% endif %}>Rating (Low-High)</option>
+        <option value="rating_desc" {% if request.args.get('sort_by') == 'rating_desc' %}selected{% endif %}>Rating (High-Low)</option>
+        <option value="date_asc" {% if request.args.get('sort_by') == 'date_asc' %}selected{% endif %}>Updated Date (Oldest-Newest)</option>
+        <option value="date_desc" {% if request.args.get('sort_by') == 'date_desc' %}selected{% endif %}>Updated Date (Newest-Oldest)</option>
+      </select>
+      <button type="submit" class="review-button">Apply Sort</button>
+    </form>
+  </div>
+
+
   {% for book in book_collection %}
 
-  <form method="POST" action="{{ url_for('books.book_query_info')}}" style="display: inline;">
+  <form method="POST" action="{{ url_for('books.book_info')}}" style="display: inline;">
     <input type="hidden" name="book" value='{{ book | tojson | safe }}'>
     <button type="submit" class="group movie-card">
       <img src="{{ book.book_cover }}" class="movie-card-img" alt="missing" />

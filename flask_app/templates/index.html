@@ -4,14 +4,23 @@
   <h2 class="main-title"> Welcome to Book Tracker! </h2>
 
   {% if current_user.is_authenticated %}
-    <div class="flex">
-      <a class="my-5 mr-5 ml-0 navlink" href="{{ url_for('users.collection') }}">view collection</a>
-      <a class="my-5 mr-5 ml-0 navlink" href="{{ url_for('books.add_book') }}">add book</a>
-    </div> 
-  
+  <div class="flex flex-col items-center justify-center w-full px-4">
+    <a class="navlink w-full max-w-xs text-center my-2" href="{{ url_for('books.collection') }}">view collection</a>
+    <a class="navlink w-full max-w-xs text-center my-2" href="{{ url_for('books.add_book') }}">add book</a>
+  </div>
   {% else %}
     <h3>Please Register or Log In!</h3>
-  {% endif %} 
+  {% endif %}
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="flashes">
+        {% for category, message in messages %}
+          <li class="flash {{ category }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
 
 </div>
 {% endblock %}
