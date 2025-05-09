@@ -50,7 +50,7 @@
 
    **Blueprints and Routes for each:**  
 
-    ### Users - User control and management including account information
+    Users - User control and management including account information
 
     **Routes:**
     - Register – Make an account  
@@ -58,7 +58,7 @@
     - Log out – Log out of that account  
     - Account – Display information about account and can change details  
 
-    ### Books – Information about users’ book collections, adding books, and adding/editing notes/ratings
+    Books – Information about users’ book collections, adding books, and adding/editing notes/ratings
 
     **Routes:**
     - Index - provides buttons to view collection and add books to collection
