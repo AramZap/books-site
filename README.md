@@ -1,25 +1,5 @@
 # 🚀 Final Project Submission
 
-## ✅ Submission Requirements
-
-1. **GitHub Repository Link**  
-   Paste the public link to your code repository here:  
-   `https://github.com/AramZap/books-site`
-
-2. **Hosted Website Link**  
-   Provide the URL to your deployed/hosted website here:  
-   `https://books-site-beta.vercel.app`
-
-3. **Final Write-up**  
-   Our write-up is below in markdown
-
-4. **Initial Proposal**
-   Here is a link to a Google Doc of our initial proposal:
-   `https://docs.google.com/document/d/1ctM2ys3kXTbVojGMX22jJczsfpAG9ks5JPml8UcIrok/edit?usp=sharing`
-
-   ---
-   ### 📝 Final Write-up
-
    #### Project Title: Book Tracker
 
    **Team Members:**  
